@@ -1,0 +1,15 @@
+# SO
+.DS_Store
+Thumbs.db
+
+# Credenciales locales
+config/config.php
+
+# Tooling
+node_modules/
+dist/
+build/
+vendor/
+
+# Entornos
+.env
