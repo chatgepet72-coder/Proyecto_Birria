@@ -16,7 +16,7 @@ try {
     PDO::ATTR_EMULATE_PREPARES   => false,
   ]);
 } catch (PDOException $e) {
-  // Si un endpoint incluye este archivo, devolvemos error JSON limpio
+  
   http_response_code(500);
   header('Content-Type: application/json; charset=utf-8');
   $msg = ($config['app']['debug'] ?? false) ? $e->getMessage() : 'DB error';

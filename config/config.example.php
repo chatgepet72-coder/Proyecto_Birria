@@ -1,17 +1,17 @@
 <?php
-// Renombra a config.php y ajusta credenciales
+
 return [
   'db' => [
     'host'    => '127.0.0.1',
     'port'    => 3306,
     'name'    => 'proyecto_birria',
-    'user'    => 'root',      // en XAMPP suele ser root
-    'pass'    => '',          // en XAMPP por defecto está vacío
+    'user'    => 'root',      
+    'pass'    => '',          
     'charset' => 'utf8mb4',
   ],
   'app' => [
-    'debug' => true, // en prod: false
-    // Orígenes permitidos para peticiones fetch (CORS) si te hace falta:
+    'debug' => true, 
+    
     'allowed_origins' => ['http://localhost', 'http://localhost:8080', 'http://localhost/proyecto_birria'],
   ],
 ];
