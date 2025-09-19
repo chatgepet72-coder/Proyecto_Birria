@@ -24,4 +24,7 @@ try {
   exit;
 }
 
+
+
+
 return $pdo;
