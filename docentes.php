@@ -1,3 +1,7 @@
+<?php
+  // Si se está renderizando dentro de index.php, no repetir navbar/footer
+  $__is_embedded = isset($_SERVER['SCRIPT_NAME']) && basename($_SERVER['SCRIPT_NAME']) === 'index.php';
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -29,11 +33,62 @@
             font-size: 0.75rem;
             font-weight: 500;
         }
+
+        /* ====== NUEVO: Tarjeta con mayor contraste, similar a Cursos ====== */
+        .docente-card{
+          background-color:#ffffff;               /* light */
+          border-radius: .75rem;
+          box-shadow: 0 10px 22px -10px rgba(0,0,0,.2);
+          transition: transform .18s ease, box-shadow .22s ease, background-color .2s ease, border-color .2s ease;
+          border: 1px solid rgba(0,0,0,.06);
+        }
+        .docente-card:hover{
+          transform: translateY(-4px);
+          box-shadow: 0 18px 28px -12px rgba(0,0,0,.28);
+        }
+
+        /* Modo oscuro: más contraste contra el fondo */
+        body.dark .docente-card{
+          background-color:#1f2937;              /* zinc-800 aprox */
+          border-color: rgba(255,255,255,.06);
+          box-shadow: 0 10px 24px -12px rgba(0,0,0,.6);
+        }
+        body.dark .docente-card:hover{
+          box-shadow: 0 20px 30px -12px rgba(0,0,0,.75);
+        }
+
+        /* Chips legibles en dark */
+        body.dark .specialty-chip.bg-\[var\(--ut-green-100\)\]{
+          background-color:#064e3b !important;   /* emerald-900 */
+          color:#86efac !important;              /* emerald-300 */
+        }
+        body.dark .specialty-chip.bg-green-100{ background-color:#064e3b !important; color:#86efac !important; }
+        body.dark .specialty-chip.bg-purple-100{ background-color:#312e81 !important; color:#c7d2fe !important; }
+        body.dark .specialty-chip.bg-yellow-100{ background-color:#78350f !important; color:#fde68a !important; }
+
+        /* Botón "Ver cursos" coherente en dark */
+        .btn-docente{
+          background:#f3f4f6; color:#111827;
+          border-radius:.5rem; font-weight:600;
+          transition: background-color .15s ease, color .15s ease, box-shadow .2s ease, transform .15s ease;
+          box-shadow: 0 4px 10px -6px rgba(0,0,0,.2);
+        }
+        .btn-docente:hover{ background:#e5e7eb; transform: translateY(-1px); }
+        body.dark .btn-docente{ background:#374151; color:#e5e7eb; box-shadow: 0 6px 16px -10px rgba(0,0,0,.6); }
+        body.dark .btn-docente:hover{ background:#4b5563; }
+
+        /* Secciones claras del archivo cuando se usa standalone */
+        body.dark .bg-white{ background-color:#111827 !important; }
+        body.dark .text-gray-900{ color:#f3f4f6 !important; }
+        body.dark .text-gray-600{ color:#d1d5db !important; }
+        body.dark .text-gray-500{ color:#9ca3af !important; }
+
+        
     </style>
 </head>
 <body class="font-sans antialiased text-gray-800">
 
-    <?php include 'navbar.php'; ?>
+    <?php if (!$__is_embedded) include 'navbar.php'; ?>
 
     <!-- Hero Section -->
     <div style="background:linear-gradient(180deg,var(--ut-green-800),var(--ut-green-900));" class="text-white">
@@ -69,7 +124,7 @@
             <!-- Teachers Grid -->
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <!-- Teacher 1 -->
-                <div class="bg-white rounded-lg overflow-hidden shadow-md teacher-card transition duration-300 ease-in-out" data-aos="fade-up">
+                <div class="docente-card teacher-card overflow-hidden transition duration-300 ease-in-out" data-aos="fade-up">
                     <div class="p-6">
                         <div class="flex items-center mb-4">
                             <img class="w-16 h-16 rounded-full object-cover" src="http://static.photos/people/200x200/4" alt="Dr. Javier López">
@@ -84,14 +139,14 @@
                             <span class="specialty-chip bg-green-100 text-green-800">Deep Learning</span>
                             <span class="specialty-chip bg-purple-100 text-purple-800">Visión por Computador</span>
                         </div>
-                        <button class="w-full bg-gray-100 hover:bg-gray-200 text-gray-800 font-medium py-2 px-4 rounded transition duration-150 ease-in-out flex items-center justify-center">
+                        <button class="w-full btn-docente py-2 px-4 flex items-center justify-center">
                             <i data-feather="book-open" class="w-4 h-4 mr-2"></i> Ver cursos
                         </button>
                     </div>
                 </div>
 
                 <!-- Teacher 2 -->
-                <div class="bg-white rounded-lg overflow-hidden shadow-md teacher-card transition duration-300 ease-in-out" data-aos="fade-up" data-aos-delay="100">
+                <div class="docente-card teacher-card overflow-hidden transition duration-300 ease-in-out" data-aos="fade-up" data-aos-delay="100">
                     <div class="p-6">
                         <div class="flex items-center mb-4">
                             <img class="w-16 h-16 rounded-full object-cover" src="http://static.photos/people/200x200/5" alt="Ing. María Fernández">
@@ -107,14 +162,14 @@
                             <span class="specialty-chip bg-purple-100 text-purple-800">Node.js</span>
                             <span class="specialty-chip bg-yellow-100 text-yellow-800">AWS</span>
                         </div>
-                        <button class="w-full bg-gray-100 hover:bg-gray-200 text-gray-800 font-medium py-2 px-4 rounded transition duration-150 ease-in-out flex items-center justify-center">
+                        <button class="w-full btn-docente py-2 px-4 flex items-center justify-center">
                             <i data-feather="book-open" class="w-4 h-4 mr-2"></i> Ver cursos
                         </button>
                     </div>
                 </div>
 
                 <!-- Teacher 3 -->
-                <div class="bg-white rounded-lg overflow-hidden shadow-md teacher-card transition duration-300 ease-in-out" data-aos="fade-up" data-aos-delay="200">
+                <div class="docente-card teacher-card overflow-hidden transition duration-300 ease-in-out" data-aos="fade-up" data-aos-delay="200">
                     <div class="p-6">
                         <div class="flex items-center mb-4">
                             <img class="w-16 h-16 rounded-full object-cover" src="http://static.photos/people/200x200/6" alt="Dr. Carlos Ruiz">
@@ -129,14 +184,14 @@
                             <span class="specialty-chip bg-green-100 text-green-800">Pentesting</span>
                             <span class="specialty-chip bg-purple-100 text-purple-800">Forensia Digital</span>
                         </div>
-                        <button class="w-full bg-gray-100 hover:bg-gray-200 text-gray-800 font-medium py-2 px-4 rounded transition duration-150 ease-in-out flex items-center justify-center">
+                        <button class="w-full btn-docente py-2 px-4 flex items-center justify-center">
                             <i data-feather="book-open" class="w-4 h-4 mr-2"></i> Ver cursos
                         </button>
                     </div>
                 </div>
 
                 <!-- Teacher 4 -->
-                <div class="bg-white rounded-lg overflow-hidden shadow-md teacher-card transition duration-300 ease-in-out" data-aos="fade-up">
+                <div class="docente-card teacher-card overflow-hidden transition duration-300 ease-in-out" data-aos="fade-up">
                     <div class="p-6">
                         <div class="flex items-center mb-4">
                             <img class="w-16 h-16 rounded-full object-cover" src="http://static.photos/people/200x200/7" alt="MSc. Laura Gómez">
@@ -152,14 +207,14 @@
                             <span class="specialty-chip bg-purple-100 text-purple-800">TensorFlow</span>
                             <span class="specialty-chip bg-yellow-100 text-yellow-800">SQL</span>
                         </div>
-                        <button class="w-full bg-gray-100 hover:bg-gray-200 text-gray-800 font-medium py-2 px-4 rounded transition duration-150 ease-in-out flex items-center justify-center">
+                        <button class="w-full btn-docente py-2 px-4 flex items-center justify-center">
                             <i data-feather="book-open" class="w-4 h-4 mr-2"></i> Ver cursos
                         </button>
                     </div>
                 </div>
 
                 <!-- Teacher 5 -->
-                <div class="bg-white rounded-lg overflow-hidden shadow-md teacher-card transition duration-300 ease-in-out" data-aos="fade-up" data-aos-delay="100">
+                <div class="docente-card teacher-card overflow-hidden transition duration-300 ease-in-out" data-aos="fade-up" data-aos-delay="100">
                     <div class="p-6">
                         <div class="flex items-center mb-4">
                             <img class="w-16 h-16 rounded-full object-cover" src="http://static.photos/people/200x200/8" alt="Ing. Roberto Sánchez">
@@ -175,14 +230,14 @@
                             <span class="specialty-chip bg-purple-100 text-purple-800">DevOps</span>
                             <span class="specialty-chip bg-yellow-100 text-yellow-800">Kubernetes</span>
                         </div>
-                        <button class="w-full bg-gray-100 hover:bg-gray-200 text-gray-800 font-medium py-2 px-4 rounded transition duration-150 ease-in-out flex items-center justify-center">
+                        <button class="w-full btn-docente py-2 px-4 flex items-center justify-center">
                             <i data-feather="book-open" class="w-4 h-4 mr-2"></i> Ver cursos
                         </button>
                     </div>
                 </div>
 
                 <!-- Teacher 6 -->
-                <div class="bg-white rounded-lg overflow-hidden shadow-md teacher-card transition duration-300 ease-in-out" data-aos="fade-up" data-aos-delay="200">
+                <div class="docente-card teacher-card overflow-hidden transition duration-300 ease-in-out" data-aos="fade-up" data-aos-delay="200">
                     <div class="p-6">
                         <div class="flex items-center mb-4">
                             <img class="w-16 h-16 rounded-full object-cover" src="http://static.photos/people/200x200/9" alt="Dra. Ana Torres">
@@ -197,7 +252,7 @@
                             <span class="specialty-chip bg-green-100 text-green-800">Solidity</span>
                             <span class="specialty-chip bg-purple-100 text-purple-800">Smart Contracts</span>
                         </div>
-                        <button class="w-full bg-gray-100 hover:bg-gray-200 text-gray-800 font-medium py-2 px-4 rounded transition duration-150 ease-in-out flex items-center justify-center">
+                        <button class="w-full btn-docente py-2 px-4 flex items-center justify-center">
                             <i data-feather="book-open" class="w-4 h-4 mr-2"></i> Ver cursos
                         </button>
                     </div>
@@ -244,30 +299,12 @@
         </div>
     </div>
 
-    <?php include 'footer.php'; ?>
+    <?php if (!$__is_embedded) include 'footer.php'; ?>
 
     <script>
-        // Toggle del menú móvil (el botón y el contenedor están en navbar.php)
-        const toggleBtn = document.querySelector('[aria-controls="mobile-menu"]');
-        if (toggleBtn) {
-          toggleBtn.addEventListener('click', () => {
-            const menu = document.getElementById('mobile-menu');
-            if (menu) menu.classList.toggle('hidden');
-          });
-        }
-
         // Animaciones e iconos
         AOS.init({ duration: 800, easing: 'ease-in-out', once: true });
         feather.replace();
-
-        // Estado visual de filtros de docentes
-        const teacherFilterButtons = document.querySelectorAll('[role="group"] button');
-        teacherFilterButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                teacherFilterButtons.forEach(btn => btn.classList.remove('active'));
-                button.classList.add('active');
-            });
-        });
     </script>
 </body>
 </html>

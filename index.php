@@ -1,3 +1,29 @@
+<?php
+// ==== [AÑADIDO] Helpers para incrustar otras páginas sin modificar su diseño ====
+function _read_file($path){ return file_exists($path) ? file_get_contents($path) : ""; }
+
+/** Quita envolturas <html>, <head>, <body> si existen y devuelve solo el cuerpo visible */
+function render_fragment_from($file){
+  $html = _read_file($file);
+  if ($html === "") return "<!-- $file no encontrado -->";
+  $lower = strtolower($html);
+
+  // Intento de extraer solo el contenido dentro de <body>...</body>
+  $body_start = stripos($lower, "<body");
+  $body_end   = stripos($lower, "</body>");
+  if ($body_start !== false && $body_end !== false){
+    // Salta atributos de <body ...>
+    $gt = stripos($lower, ">", $body_start);
+    if ($gt !== false){
+      $inner = substr($html, $gt+1, $body_end - ($gt+1));
+      return $inner;
+    }
+  }
+
+  // Si no hay <body>, retornamos tal cual (útil si el archivo ya es un fragmento)
+  return $html;
+}
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -32,6 +58,81 @@
         .feature-icon {
             width: 60px; height: 60px; display:flex; align-items:center; justify-content:center; border-radius:12px;
         }
+        /* ==== navegación con anclas sin tocar tu navbar ==== */
+        html { scroll-behavior: smooth; }
+        /* Evita que la sección quede oculta por la navbar fija (ajusta 96px si tu navbar es más alta/baja) */
+        section[id] { scroll-margin-top: 96px; }
+        /* Offset también para el hero/anclas en div */
+        #inicio { scroll-margin-top: 96px; }
+        div[id] { scroll-margin-top: 96px; }
+
+        /* Modo oscuro base */
+        body.dark {
+          background-color: #111827; /* gris oscuro */
+          color: #f3f4f6;           /* texto claro */
+        }
+        /* Ajustes para secciones claras */
+        body.dark .bg-white { background-color: #1f2937 !important; }   /* gris intermedio */
+        body.dark .bg-gray-50 { background-color: #111827 !important; } /* fondo más oscuro */
+        body.dark .text-gray-900 { color: #f3f4f6 !important; }
+        body.dark .text-gray-500 { color: #9ca3af !important; }
+        body.dark .text-gray-600 { color: #d1d5db !important; }
+
+        /* Tarjetas / elementos */
+        body.dark .course-card { background-color: #1f2937; }
+        body.dark .bg-gray-50.p-8 { background-color: #1f2937; }
+
+        /* Tarjetas de docentes */
+        .docente-card {
+          background-color: #ffffff;          /* Claro en modo light */
+          border-radius: 0.75rem;             /* Bordes redondeados */
+          padding: 1.5rem;
+          box-shadow: 0 6px 18px -6px rgba(0,0,0,0.15);
+          transition: transform .2s ease, box-shadow .2s ease;
+        }
+        .docente-card:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 12px 22px -8px rgba(0,0,0,0.25);
+        }
+        /* Modo oscuro (más oscuro) */
+        body.dark .docente-card{
+          background-color:#0f172a !important;         /* slate-900 aprox. más oscuro */
+          border:1px solid rgba(255,255,255,.04) !important;
+          box-shadow: 0 10px 28px -14px rgba(0,0,0,.85), 0 0 0 1px rgba(255,255,255,.02) inset !important;
+        }
+        body.dark .docente-card:hover{
+          background-color:#131c31 !important;         /* un tic más claro en hover */
+          border-color: rgba(255,255,255,.07) !important;
+          box-shadow: 0 18px 34px -12px rgba(0,0,0,.9), 0 0 0 1px rgba(255,255,255,.04) inset !important;
+        }
+        /* Texto dentro de la card para que siga siendo legible */
+        body.dark .docente-card .text-gray-900 { color:#f3f4f6 !important; }
+        body.dark .docente-card .text-gray-600 { color:#cbd5e1 !important; }
+        /* Chips más oscuros */
+        body.dark .docente-card .specialty-chip.bg-\[var\(--ut-green-100\)\]{
+          background-color:#052e24 !important; color:#86efac !important;
+          border:1px solid rgba(134,239,172,.25);
+        }
+        body.dark .docente-card .specialty-chip.bg-green-100{
+          background-color:#064e3b !important; color:#86efac !important;
+          border:1px solid rgba(134,239,172,.25);
+        }
+        body.dark .docente-card .specialty-chip.bg-purple-100{
+          background-color:#1e1b4b !important; color:#c7d2fe !important;
+          border:1px solid rgba(199,210,254,.25);
+        }
+        body.dark .docente-card .specialty-chip.bg-yellow-100{
+          background-color:#451a03 !important; color:#fde68a !important;
+          border:1px solid rgba(253,230,138,.25);
+        }
+        /* Botón dentro de la card más oscuro */
+        body.dark .docente-card .btn-docente{
+          background:#0b1220 !important; 
+          color:#e5e7eb !important;
+          border:1px solid rgba(255,255,255,.06) !important;
+          box-shadow: 0 8px 18px -12px rgba(0,0,0,.75) !important;
+        }
+        body.dark .docente-card .btn-docente:hover{ background:#111a2a !important; }
     </style>
 </head>
 <body class="font-sans antialiased text-gray-800">
@@ -39,7 +140,7 @@
     <?php include 'navbar.php'; ?>
 
     <!-- Hero Section -->
-    <div id="hero" class="hero-gradient text-white">
+    <div id="inicio" class="hero-gradient text-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-32">
             <div class="lg:grid lg:grid-cols-2 lg:gap-8 items-center">
                 <div class="mb-12 lg:mb-0" data-aos="fade-right">
@@ -174,7 +275,7 @@
                 <p class="mt-4 max-w-2xl text-xl text-gray-500 mx-auto">Experiencias reales de nuestra comunidad académica</p>
             </div>
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Testimonial cards (sin cambios de estructura) -->
+                <!-- Testimonios iguales a tu diseño -->
                 <div class="bg-gray-50 p-8 rounded-lg" data-aos="fade-up">
                     <div class="flex items-center mb-4">
                         <img class="w-12 h-12 rounded-full object-cover" src="http://static.photos/people/200x200/1" alt="Ana Martínez">
@@ -249,6 +350,19 @@
         </div>
     </div>
 
+    <!-- ==== Secciones unificadas (anclas) ==== -->
+    <section id="docentes">
+        <?php echo render_fragment_from('docentes.php'); ?>
+    </section>
+
+    <section id="cursos">
+        <?php echo render_fragment_from('cursos.php'); ?>
+    </section>
+
+    <section id="recursos">
+        <?php echo render_fragment_from('recursos.php'); ?>
+    </section>
+
     <?php include 'footer.php'; ?>
 
     <script>
@@ -256,9 +370,9 @@
         AOS.init({ duration: 800, easing: 'ease-in-out', once: true });
         feather.replace();
 
-        // Vanta.js background (verde vibes)
+        // Vanta.js background (ahora sobre #inicio)
         VANTA.GLOBE({
-            el: "#hero",
+            el: "#inicio",
             mouseControls: true,
             touchControls: true,
             gyroControls: false,
@@ -270,6 +384,74 @@
             backgroundColor: 0x0c4f2e,
             size: 0.7
         });
+
+        // Interceptor: convierte enlaces *.php (y /) de la navbar a scroll por anclas
+        (function () {
+            const map = {
+                '':           '#inicio',  // raíz sin archivo
+                '/':          '#inicio',
+                'index.php':  '#inicio',
+                'docentes.php':'#docentes',
+                'cursos.php':  '#cursos',
+                'recursos.php':'#recursos'
+            };
+
+            document.addEventListener('click', function (e) {
+                const a = e.target.closest('a[href]');
+                if (!a) return;
+
+                const href = a.getAttribute('href');
+                if (!href) return;
+
+                // Si ya es un ancla (#inicio, #cursos, etc.), dejamos que el navegador lo maneje
+                if (href.startsWith('#')) return;
+
+                try {
+                    const url  = new URL(href, window.location.href);
+                    const file = url.pathname.split('/').pop().toLowerCase(); // p.ej. 'index.php'
+                    const key = (map.hasOwnProperty(file) ? file : (url.pathname === '/' ? '/' : ''));
+
+                    if (map[key]) {
+                        e.preventDefault();
+                        const target = document.querySelector(map[key]);
+                        if (target) {
+                            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                            history.pushState(null, '', map[key]);
+                        } else {
+                            // Fallback a top
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                            history.pushState(null, '', '#inicio');
+                        }
+                    }
+                } catch (err) { /* noop */ }
+            }, true);
+        })();
+
+        // Botón modo oscuro (si está en navbar como #toggleDark)
+        (function(){
+          const toggle = document.getElementById("toggleDark");
+          const body = document.body;
+
+          // Cargar preferencia guardada
+          if(localStorage.getItem("theme") === "dark"){
+            body.classList.add("dark");
+            if (toggle) toggle.innerHTML = "☀️";
+          }
+
+          if(toggle){
+            toggle.addEventListener("click", () => {
+              body.classList.toggle("dark");
+              if(body.classList.contains("dark")){
+                localStorage.setItem("theme","dark");
+                toggle.innerHTML = "☀️";
+              } else {
+                localStorage.setItem("theme","light");
+                toggle.innerHTML = "🌙";
+              }
+              feather.replace(); // refrescar íconos si usas feather
+            });
+          }
+        })();
     </script>
 </body>
 </html>
