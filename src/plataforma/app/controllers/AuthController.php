@@ -1,21 +1,59 @@
 <?php
 class AuthController {
-  function showLogin(){
-    ob_start(); include __DIR__.'/../views/auth/login.php'; return ob_get_clean();
+  public function showLogin(){
+    // muestra tu vista de login actual
+    include __DIR__ . '/../views/auth/login.php';
   }
-  function login(){
-    require_once __DIR__.'/../../../../src/db.php';
-    $email = $_POST['email'] ?? '';
+
+  public function login(){
+    $email = trim($_POST['email'] ?? '');
     $pass  = $_POST['password'] ?? '';
-    // Demo super simple (cámbialo por tu tabla users)
-    if ($email && $pass) {
-      $_SESSION['user'] = ['id'=>1,'name'=>'Demo','email'=>$email,'role_id'=>1];
-      header('Location: /src/plataforma/app'); exit;
+
+    if ($email === '' || $pass === '') {
+      $_SESSION['flash_error'] = 'Completa tus credenciales';
+      header('Location: /src/plataforma/'); exit;
     }
-    $_SESSION['flash_error'] = 'Credenciales inválidas';
-    header('Location: /src/plataforma/'); exit;
+
+    $pdo = db();
+
+    // Trae también el slug del rol
+    $sql = "
+      SELECT u.id, u.name, u.email, u.password, u.status, r.slug AS role_slug
+      FROM users u
+      JOIN roles r ON r.id = u.role_id
+      WHERE u.email = ? AND u.status = 'active'
+      LIMIT 1
+    ";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([$email]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$user || !password_verify($pass, $user['password'])) {
+      $_SESSION['flash_error'] = 'Credenciales inválidas';
+      header('Location: /src/plataforma/'); exit;
+    }
+
+    // Guarda datos mínimos en sesión
+    $_SESSION['user'] = [
+      'id'    => (int)$user['id'],
+      'name'  => $user['name'] ?? '',
+      'email' => $user['email'],
+      'role'  => $user['role_slug'], // 'alumno' | 'maestro' | 'admin'
+    ];
+
+    // Redirección por rol
+    $destinos = [
+      'alumno'  => '/src/plataforma/app',
+      'maestro' => '/src/plataforma/teacher',
+      'admin'   => '/src/plataforma/admin',
+    ];
+    $goto = $destinos[$_SESSION['user']['role']] ?? '/src/plataforma/app';
+    header('Location: '.$goto);
+    exit;
   }
-  function logout(){
-    unset($_SESSION['user']); header('Location: /src/plataforma/');
+
+  public function logout(){
+    session_destroy();
+    header('Location: /src/plataforma/'); exit;
   }
 }

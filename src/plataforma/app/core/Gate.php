@@ -1,23 +1,30 @@
 <?php
-// --- SHIM: expone una función db() usando tu $pdo global de src/db.php ---
-if (!function_exists('db')) {
-    function db() {
-        // $pdo llega desde src/db.php que ya incluyes en index.php
-        global $pdo;
-        if (!$pdo) {
-            throw new RuntimeException('PDO no inicializado: revisa src/db.php');
-        }
-        return $pdo;
-    }
-}
-
-class Gate {
-  static function is($slug){
-    $u = Auth::user(); if(!$u) return false;
-    $pdo = db();
-    $r = $pdo->prepare("SELECT slug FROM roles WHERE id=?");
-    $r->execute([$u['role_id']]);
-    return ($r->fetchColumn() === $slug);
+/** Comprobaciones de rol basadas en la sesión */
+class Gate
+{
+  /** Devuelve el slug de rol actual: 'alumno', 'maestro' o 'admin' */
+  public static function role(): string {
+    return $_SESSION['user']['role'] ?? '';
   }
-  static function any(array $slugs){ foreach($slugs as $s){ if(self::is($s)) return true; } return false; }
+
+  /** ¿Coincide exactamente con un rol? o alguno si pasas array */
+  public static function is($roles): bool {
+    $current = self::role();
+    if (is_array($roles)) {
+      return in_array($current, $roles, true);
+    }
+    return $current === $roles;
+  }
+
+  /** ¿Pertenece a cualquiera de estos roles? */
+  public static function any(array $roles): bool {
+    return self::is($roles);
+  }
+
+  /** Si no tiene el/los roles, redirige fuera (al login por simplicidad) */
+  public static function allow($roles): void {
+    if (!self::any((array)$roles)) {
+      header('Location: /src/plataforma/'); exit;
+    }
+  }
 }
