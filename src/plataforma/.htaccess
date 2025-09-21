@@ -1,0 +1,12 @@
+RewriteEngine On
+RewriteBase /src/plataforma/
+
+# No mostrar listado de carpetas
+Options -Indexes
+
+# Deja pasar sólo archivos reales (no directorios)
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteRule ^ - [L]
+
+# Todo lo demás al front controller
+RewriteRule ^ index.php [QSA,L]

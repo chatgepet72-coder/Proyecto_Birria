@@ -1,6 +1,7 @@
 <?php
   // URL de la plataforma estudiantil (ajústala a lo tuyo)
-  $PLATAFORMA_URL = "/plataforma-estudiantil"; // p.ej. /login.php, /alumnos/, https://plataforma.utec.edu
+  $PLATAFORMA_URL = "/src/plataforma/";
+  // p.ej. /login.php, /alumnos/, https://plataforma.utec.edu
 ?>
 <nav class="fixed top-0 inset-x-0 z-50">
   <div class="nav-shell mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -41,9 +42,10 @@
           </span>
         </button>
 
-        <!-- Login -->
+        <!-- Plataforma (no interceptar) -->
         <a href="<?php echo htmlspecialchars($PLATAFORMA_URL); ?>"
-           class="btn-login">
+           class="btn-login"
+           data-external="true">
           Plataforma estudiantil
         </a>
       </div>
@@ -73,7 +75,9 @@
       <a href="#cursos"    class="mobile-link">Cursos</a>
       <a href="#docentes"  class="mobile-link">Docentes</a>
       <a href="#recursos"  class="mobile-link">Recursos</a>
-      <a href="<?php echo htmlspecialchars($PLATAFORMA_URL); ?>" class="btn-login w-full justify-center mt-2">Iniciar Sesión</a>
+      <a href="<?php echo htmlspecialchars($PLATAFORMA_URL); ?>"
+         class="btn-login w-full justify-center mt-2"
+         data-external="true">Iniciar Sesión</a>
     </div>
   </div>
 </nav>
@@ -86,9 +90,9 @@
 
   /* Shell con blur y sombra suave */
   .nav-shell{ background: color-mix(in oklab, white 80%, transparent); backdrop-filter: blur(10px); border-radius: 0 0 18px 18px; }
-  .nav-title{ color:#14532d; } /* var(--ut-green-900) aprox */
+  .nav-title{ color:#14532d; }
   .nav-link{ color:#1f2937; font-weight:500; }
-  .nav-link:hover{ color:#0c4f2e; } /* var(--ut-green-900) */
+  .nav-link:hover{ color:#0c4f2e; }
   .btn-login{
     display:inline-flex; align-items:center; gap:.5rem;
     background:#28a55f; color:white; padding:.6rem 1rem; border-radius:.75rem;

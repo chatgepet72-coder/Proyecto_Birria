@@ -385,47 +385,54 @@ function render_fragment_from($file){
             size: 0.7
         });
 
-        // Interceptor: convierte enlaces *.php (y /) de la navbar a scroll por anclas
         (function () {
-            const map = {
-                '':           '#inicio',  // raíz sin archivo
-                '/':          '#inicio',
-                'index.php':  '#inicio',
-                'docentes.php':'#docentes',
-                'cursos.php':  '#cursos',
-                'recursos.php':'#recursos'
-            };
+  // Mapa archivo -> ancla
+  const map = {
+    'index.php':   '#inicio',
+    'docentes.php':'#docentes',
+    'cursos.php':  '#cursos',
+    'recursos.php':'#recursos'
+  };
 
-            document.addEventListener('click', function (e) {
-                const a = e.target.closest('a[href]');
-                if (!a) return;
+  document.addEventListener('click', function (e) {
+    const a = e.target.closest('a[href]');
+    if (!a) return;
 
-                const href = a.getAttribute('href');
-                if (!href) return;
+    const href = a.getAttribute('href');
+    if (!href) return;
 
-                // Si ya es un ancla (#inicio, #cursos, etc.), dejamos que el navegador lo maneje
-                if (href.startsWith('#')) return;
+    // 1) Respeta anchors directos y enlaces marcados como externos
+    if (href.startsWith('#') || a.hasAttribute('data-external')) return;
 
-                try {
-                    const url  = new URL(href, window.location.href);
-                    const file = url.pathname.split('/').pop().toLowerCase(); // p.ej. 'index.php'
-                    const key = (map.hasOwnProperty(file) ? file : (url.pathname === '/' ? '/' : ''));
+    try {
+      const url = new URL(href, window.location.href);
 
-                    if (map[key]) {
-                        e.preventDefault();
-                        const target = document.querySelector(map[key]);
-                        if (target) {
-                            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                            history.pushState(null, '', map[key]);
-                        } else {
-                            // Fallback a top
-                            window.scrollTo({ top: 0, behavior: 'smooth' });
-                            history.pushState(null, '', '#inicio');
-                        }
-                    }
-                } catch (err) { /* noop */ }
-            }, true);
-        })();
+      // 2) Sólo mismo origen
+      if (url.origin !== window.location.origin) return;
+
+      // 3) No interceptar nada de la plataforma (ajusta el prefijo si cambiaste la ruta)
+      if (url.pathname.startsWith('/src/plataforma')) return;
+
+      // 4) Detectar archivo de destino
+      const file = url.pathname.split('/').pop().toLowerCase();
+
+      // Caso “raíz” con / o sin archivo -> #inicio (sólo si navega a la misma página base)
+      const isRootToSelf =
+        (file === '' && (url.pathname === '/' || url.pathname === window.location.pathname));
+
+      const targetSel = isRootToSelf ? '#inicio' : map[file];
+      if (!targetSel) return;
+
+      // 5) Interceptar y hacer scroll suave
+      e.preventDefault();
+      const target = document.querySelector(targetSel);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        history.pushState(null, '', targetSel);
+      }
+    } catch (err) { /* noop */ }
+  }, true);
+})();
 
         // Botón modo oscuro (si está en navbar como #toggleDark)
         (function(){
