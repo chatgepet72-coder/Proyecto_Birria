@@ -46,7 +46,7 @@
         <a href="<?php echo htmlspecialchars($PLATAFORMA_URL); ?>"
            class="btn-login"
            data-external="true">
-          Plataforma estudiantil
+          Plataforma Estudiantil
         </a>
       </div>
 
@@ -77,7 +77,7 @@
       <a href="#recursos"  class="mobile-link">Recursos</a>
       <a href="<?php echo htmlspecialchars($PLATAFORMA_URL); ?>"
          class="btn-login w-full justify-center mt-2"
-         data-external="true">Iniciar Sesión</a>
+         data-external="true">Plataforma Estudiantil</a>
     </div>
   </div>
 </nav>

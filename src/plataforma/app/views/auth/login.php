@@ -1,10 +1,12 @@
 <?php
 // src/plataforma/app/views/auth/login.php
-// Muestra mensajes flash opcionales
 if (session_status() === PHP_SESSION_NONE) session_start();
 $error   = $_SESSION['flash_error']   ?? null;
 $success = $_SESSION['flash_success'] ?? null;
 unset($_SESSION['flash_error'], $_SESSION['flash_success']);
+
+// URL de tu landing/principal (ajústala si es distinto)
+$HOME_URL = '/src'; // p.ej. '/' o '/index.php'
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -17,9 +19,9 @@ unset($_SESSION['flash_error'], $_SESSION['flash_success']);
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
   <style>
     :root{
-      --ut-green-800:#166534; /* tailwind emerald-800 aprox */
-      --ut-green-700:#15803d; /* emerald-700 */
-      --ut-green-600:#16a34a; /* emerald-600 */
+      --ut-green-800:#166534;
+      --ut-green-700:#15803d;
+      --ut-green-600:#16a34a;
     }
     body{
       font-family: 'Roboto', sans-serif;
@@ -50,6 +52,10 @@ unset($_SESSION['flash_error'], $_SESSION['flash_success']);
       transform: translateY(-2px);
       box-shadow: 0 14px 28px -16px rgba(22,163,74,.6);
     }
+    .btn-ghost{
+      transition: background .2s ease, transform .2s ease;
+    }
+    .btn-ghost:hover{ background: rgba(255,255,255,.08); transform: translateY(-1px); }
   </style>
 </head>
 <body class="flex items-center justify-center p-4">
@@ -110,7 +116,6 @@ unset($_SESSION['flash_error'], $_SESSION['flash_success']);
               required
               class="input-field w-full pl-10 pr-10 py-3 rounded-lg text-white placeholder-white/50"
               placeholder="••••••••">
-            <!-- toggle visibility (opcional) -->
             <button type="button" aria-label="Mostrar/ocultar contraseña"
                     class="absolute inset-y-0 right-0 pr-3 flex items-center text-white/70 hover:text-white/90"
                     onclick="const p=document.getElementById('password'); p.type = p.type==='password' ? 'text' : 'password';">
@@ -131,6 +136,13 @@ unset($_SESSION['flash_error'], $_SESSION['flash_success']);
         <button type="submit" class="btn-login w-full flex justify-center py-3 px-4 rounded-lg text-sm font-medium text-white">
           Iniciar Sesión
         </button>
+
+        <!-- Botón: Volver al inicio -->
+        <a href="<?php echo htmlspecialchars($HOME_URL); ?>"
+           class="btn-ghost w-full inline-flex items-center justify-center gap-2 py-3 px-4 rounded-lg text-sm font-medium text-white/90 ring-1 ring-white/20">
+          <i data-feather="arrow-left"></i>
+          Volver al inicio
+        </a>
       </form>
     </div>
 
