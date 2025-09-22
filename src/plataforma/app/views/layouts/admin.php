@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="es" class="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>UTEC · Panel Administrativo</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script src="https://unpkg.com/feather-icons"></script>
+
+  <!-- Tailwind config: paleta verde -->
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: { /* emerald */
+              50:'#ecfdf5',100:'#d1fae5',200:'#a7f3d0',300:'#6ee7b7',400:'#34d399',
+              500:'#10b981',600:'#059669',700:'#047857',800:'#065f46',900:'#064e3b'
+            },
+            neutral: { /* slate */
+              50:'#f8fafc',100:'#f1f5f9',200:'#e2e8f0',300:'#cbd5e1',400:'#94a3b8',
+              500:'#64748b',600:'#475569',700:'#334155',800:'#1e293b',900:'#0f172a'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    .sidebar { transition:all .25s ease; }
+    .sidebar-collapsed { width:5rem; }
+    .sidebar-collapsed .nav-text,
+    .sidebar-collapsed .logo-text,
+    .sidebar-collapsed .user-info { display:none; }
+    .sidebar-collapsed .nav-item { justify-content:center; }
+
+    .content-area { transition:all .25s ease; }
+    .content-expanded { margin-left:16rem; }
+    .content-collapsed { margin-left:5rem; }
+
+    @media (max-width: 768px){
+      .sidebar { position:fixed; z-index:50; transform:translateX(-100%); }
+      .sidebar-mobile { transform:translateX(0); }
+      .content-area { margin-left:0 !important; }
+    }
+
+    /* Botón tema (sol/luna) animado */
+    .nav-toggle { position:relative; }
+    .nav-toggle .icon-sun, .nav-toggle .icon-moon{
+      position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+      transition: opacity .25s ease, transform .25s ease;
+    }
+    .nav-toggle .icon-moon{ opacity:0; transform:scale(.5) rotate(-90deg); }
+    html.dark .nav-toggle .icon-sun{ opacity:0; transform:scale(.5) rotate(90deg); }
+    html.dark .nav-toggle .icon-moon{ opacity:1; transform:scale(1) rotate(0deg); }
+  </style>
+</head>
+
+<body class="bg-neutral-50 dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 min-h-screen">
+  <div class="flex">
+    <!-- Sidebar -->
+    <aside id="sidebar" class="sidebar bg-white dark:bg-neutral-800 shadow-lg h-screen fixed top-0 left-0 w-64 overflow-y-auto">
+      <div class="p-4 flex items-center space-x-3">
+        <div class="bg-primary-500 p-2 rounded-lg">
+          <i data-feather="book" class="text-white"></i>
+        </div>
+        <span class="logo-text text-xl font-bold text-primary-700 dark:text-primary-300">UTEC</span>
+      </div>
+
+      <div class="px-4 pb-4 border-b border-neutral-200 dark:border-neutral-700">
+        <div class="user-info flex items-center space-x-3">
+          <div class="w-10 h-10 rounded-full bg-primary-100 dark:bg-primary-900 flex items-center justify-center">
+            <i data-feather="user" class="text-primary-700 dark:text-primary-300"></i>
+          </div>
+          <div>
+            <p class="font-medium leading-tight">Admin. María Gómez</p>
+            <p class="text-sm text-neutral-500 dark:text-neutral-400 leading-tight">mgomez@utec.edu</p>
+          </div>
+        </div>
+      </div>
+
+      <nav class="p-4">
+        <ul class="space-y-2">
+          <li>
+            <a href="#" class="nav-item flex items-center space-x-3 p-3 rounded-lg bg-primary-50 dark:bg-neutral-700/60 text-primary-700 dark:text-primary-300">
+              <i data-feather="home"></i><span class="nav-text">Panel</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" class="nav-item flex items-center space-x-3 p-3 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-700">
+              <i data-feather="users"></i><span class="nav-text">Estudiantes</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" class="nav-item flex items-center space-x-3 p-3 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-700">
+              <i data-feather="user-plus"></i><span class="nav-text">Profesores</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" class="nav-item flex items-center space-x-3 p-3 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-700">
+              <i data-feather="book-open"></i><span class="nav-text">Materias</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" class="nav-item flex items-center space-x-3 p-3 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-700">
+              <i data-feather="calendar"></i><span class="nav-text">Horarios</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" class="nav-item flex items-center space-x-3 p-3 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-700">
+              <i data-feather="award"></i><span class="nav-text">Calificaciones</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" class="nav-item flex items-center space-x-3 p-3 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-700">
+              <i data-feather="dollar-sign"></i><span class="nav-text">Pagos</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" class="nav-item flex items-center space-x-3 p-3 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-700">
+              <i data-feather="settings"></i><span class="nav-text">Configuración</span>
+            </a>
+          </li>
+          <li>
+            <a href="#" class="nav-item flex items-center space-x-3 p-3 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-700">
+              <i data-feather="bell"></i><span class="nav-text">Anuncios</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="p-4 border-t border-neutral-200 dark:border-neutral-700 mt-auto">
+        <a href="#" class="nav-item flex items-center space-x-3 p-3 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-700 w-full">
+          <i data-feather="log-out"></i><span class="nav-text">Cerrar sesión</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Contenido -->
+    <div id="content" class="content-area flex-1 content-expanded min-h-screen">
+      <!-- Topbar -->
+      <header class="bg-white dark:bg-neutral-800 shadow-sm sticky top-0 z-40">
+        <div class="flex items-center justify-between p-4">
+          <div class="flex items-center gap-4">
+            <button id="sidebar-toggle" class="text-neutral-500 dark:text-neutral-400">
+              <i data-feather="menu"></i>
+            </button>
+            <h1 class="text-xl font-bold">Panel Administrativo</h1>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <!-- Toggle tema -->
+            <button id="theme-toggle" class="nav-toggle h-9 w-9 rounded-xl ring-1 ring-black/10 dark:ring-white/10 hover:ring-black/20 dark:hover:ring-white/20 bg-white/80 dark:bg-neutral-700/60">
+              <span class="icon-sun">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="4"></circle>
+                  <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+                </svg>
+              </span>
+              <span class="icon-moon">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z"/>
+                </svg>
+              </span>
+            </button>
+
+            <a href="#" class="p-2 rounded-full hover:bg-neutral-100 dark:hover:bg-neutral-700 relative">
+              <i data-feather="bell"></i>
+              <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+            </a>
+
+            <div class="w-8 h-8 rounded-full bg-primary-100 dark:bg-primary-900 flex items-center justify-center">
+              <i data-feather="user" class="text-primary-700 dark:text-primary-300"></i>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main class="p-6">
+        <!-- Bienvenida -->
+        <div class="bg-gradient-to-r from-primary-500 to-primary-700 rounded-xl p-6 text-white mb-6" data-aos="fade-up">
+          <h2 class="text-2xl font-bold mb-1">¡Bienvenida, Administradora!</h2>
+          <p class="opacity-90">Gestiona toda la institución desde este panel centralizado.</p>
+        </div>
+
+        <!-- Tarjetas KPIs -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+          <div class="bg-white dark:bg-neutral-800 rounded-xl shadow-sm p-6 border-l-4 border-primary-500" data-aos="fade-up">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-neutral-500 dark:text-neutral-400 text-sm">Estudiantes</p>
+                <h3 class="text-2xl font-bold mt-1">1,245</h3>
+              </div>
+              <div class="p-3 rounded-lg bg-primary-50 dark:bg-neutral-700">
+                <i data-feather="users" class="text-primary-600"></i>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white dark:bg-neutral-800 rounded-xl shadow-sm p-6 border-l-4 border-emerald-500" data-aos="fade-up" data-aos-delay="50">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-neutral-500 dark:text-neutral-400 text-sm">Profesores</p>
+                <h3 class="text-2xl font-bold mt-1">87</h3>
+              </div>
+              <div class="p-3 rounded-lg bg-emerald-50 dark:bg-neutral-700">
+                <i data-feather="user-plus" class="text-emerald-600"></i>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white dark:bg-neutral-800 rounded-xl shadow-sm p-6 border-l-4 border-amber-500" data-aos="fade-up" data-aos-delay="100">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-neutral-500 dark:text-neutral-400 text-sm">Materias</p>
+                <h3 class="text-2xl font-bold mt-1">56</h3>
+              </div>
+              <div class="p-3 rounded-lg bg-amber-50 dark:bg-neutral-700">
+                <i data-feather="book-open" class="text-amber-600"></i>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white dark:bg-neutral-800 rounded-xl shadow-sm p-6 border-l-4 border-purple-500" data-aos="fade-up" data-aos-delay="150">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-neutral-500 dark:text-neutral-400 text-sm">Pagos pendientes</p>
+                <h3 class="text-2xl font-bold mt-1">32</h3>
+              </div>
+              <div class="p-3 rounded-lg bg-purple-50 dark:bg-neutral-700">
+                <i data-feather="dollar-sign" class="text-purple-600"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Acciones rápidas -->
+        <section class="bg-white dark:bg-neutral-800 rounded-xl shadow-sm p-6 mb-6" data-aos="fade-up">
+          <h2 class="text-xl font-bold mb-4">Acciones rápidas</h2>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <a href="#" class="flex flex-col items-center justify-center p-4 rounded-lg border border-neutral-100 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-700 transition">
+              <div class="p-3 rounded-lg bg-primary-50 dark:bg-neutral-700 mb-2">
+                <i data-feather="user-plus" class="text-primary-600"></i>
+              </div>
+              <span class="text-sm font-medium">Nuevo estudiante</span>
+            </a>
+            <a href="#" class="flex flex-col items-center justify-center p-4 rounded-lg border border-neutral-100 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-700 transition">
+              <div class="p-3 rounded-lg bg-emerald-50 dark:bg-neutral-700 mb-2">
+                <i data-feather="user-plus" class="text-emerald-600"></i>
+              </div>
+              <span class="text-sm font-medium">Nuevo profesor</span>
+            </a>
+            <a href="#" class="flex flex-col items-center justify-center p-4 rounded-lg border border-neutral-100 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-700 transition">
+              <div class="p-3 rounded-lg bg-amber-50 dark:bg-neutral-700 mb-2">
+                <i data-feather="book-open" class="text-amber-600"></i>
+              </div>
+              <span class="text-sm font-medium">Nueva materia</span>
+            </a>
+            <a href="#" class="flex flex-col items-center justify-center p-4 rounded-lg border border-neutral-100 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-700 transition">
+              <div class="p-3 rounded-lg bg-purple-50 dark:bg-neutral-700 mb-2">
+                <i data-feather="bell" class="text-purple-600"></i>
+              </div>
+              <span class="text-sm font-medium">Nuevo anuncio</span>
+            </a>
+          </div>
+        </section>
+
+        <!-- Últimos registros & Pendientes -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <section class="bg-white dark:bg-neutral-800 rounded-xl shadow-sm p-6" data-aos="fade-up">
+            <div class="flex items-center justify-between mb-4">
+              <h2 class="text-xl font-bold">Últimos estudiantes</h2>
+              <a href="#" class="text-primary-700 dark:text-primary-300 text-sm">Ver todos</a>
+            </div>
+
+            <div class="space-y-4">
+              <div class="flex items-center justify-between p-3 border border-neutral-100 dark:border-neutral-700 rounded-lg">
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-full bg-primary-100 dark:bg-primary-900 flex items-center justify-center">
+                    <i data-feather="user" class="text-primary-700 dark:text-primary-300"></i>
+                  </div>
+                  <div>
+                    <h3 class="font-medium">Ana Rodríguez</h3>
+                    <p class="text-sm text-neutral-500 dark:text-neutral-400">Ing. Sistemas</p>
+                  </div>
+                </div>
+                <span class="text-xs bg-primary-100 dark:bg-primary-900 text-primary-700 dark:text-primary-300 px-2 py-1 rounded-full">Nuevo</span>
+              </div>
+
+              <div class="flex items-center justify-between p-3 border border-neutral-100 dark:border-neutral-700 rounded-lg">
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-full bg-primary-100 dark:bg-primary-900 flex items-center justify-center">
+                    <i data-feather="user" class="text-primary-700 dark:text-primary-300"></i>
+                  </div>
+                  <div>
+                    <h3 class="font-medium">Carlos Méndez</h3>
+                    <p class="text-sm text-neutral-500 dark:text-neutral-400">Lic. Administración</p>
+                  </div>
+                </div>
+                <span class="text-xs bg-emerald-100 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300 px-2 py-1 rounded-full">Activo</span>
+              </div>
+
+              <div class="flex items-center justify-between p-3 border border-neutral-100 dark:border-neutral-700 rounded-lg">
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-full bg-primary-100 dark:bg-primary-900 flex items-center justify-center">
+                    <i data-feather="user" class="text-primary-700 dark:text-primary-300"></i>
+                  </div>
+                  <div>
+                    <h3 class="font-medium">Luis Fernández</h3>
+                    <p class="text-sm text-neutral-500 dark:text-neutral-400">Ing. Industrial</p>
+                  </div>
+                </div>
+                <span class="text-xs bg-amber-100 dark:bg-amber-900 text-amber-700 dark:text-amber-300 px-2 py-1 rounded-full">Pendiente</span>
+              </div>
+            </div>
+          </section>
+
+          <section class="bg-white dark:bg-neutral-800 rounded-xl shadow-sm p-6" data-aos="fade-up">
+            <div class="flex items-center justify-between mb-4">
+              <h2 class="text-xl font-bold">Pendientes administrativos</h2>
+              <a href="#" class="text-primary-700 dark:text-primary-300 text-sm">Ver todos</a>
+            </div>
+
+            <div class="space-y-4">
+              <div class="flex items-start justify-between p-3 border border-neutral-100 dark:border-neutral-700 rounded-lg">
+                <div class="flex items-start gap-3">
+                  <div class="p-2 rounded-lg bg-amber-50 dark:bg-neutral-700 mt-1">
+                    <i data-feather="alert-circle" class="text-amber-600"></i>
+                  </div>
+                  <div>
+                    <h3 class="font-medium">Documentos faltantes</h3>
+                    <p class="text-sm text-neutral-500 dark:text-neutral-400">15 estudiantes con documentos incompletos</p>
+                  </div>
+                </div>
+                <a href="#" class="p-2 rounded-full hover:bg-neutral-100 dark:hover:bg-neutral-700">
+                  <i data-feather="chevron-right" class="text-neutral-400"></i>
+                </a>
+              </div>
+
+              <div class="flex items-start justify-between p-3 border border-neutral-100 dark:border-neutral-700 rounded-lg">
+                <div class="flex items-start gap-3">
+                  <div class="p-2 rounded-lg bg-primary-50 dark:bg-neutral-700 mt-1">
+                    <i data-feather="dollar-sign" class="text-primary-600"></i>
+                  </div>
+                  <div>
+                    <h3 class="font-medium">Pagos atrasados</h3>
+                    <p class="text-sm text-neutral-500 dark:text-neutral-400">32 pagos pendientes de confirmación</p>
+                  </div>
+                </div>
+                <a href="#" class="p-2 rounded-full hover:bg-neutral-100 dark:hover:bg-neutral-700">
+                  <i data-feather="chevron-right" class="text-neutral-400"></i>
+                </a>
+              </div>
+
+              <div class="flex items-start justify-between p-3 border border-neutral-100 dark:border-neutral-700 rounded-lg">
+                <div class="flex items-start gap-3">
+                  <div class="p-2 rounded-lg bg-rose-50 dark:bg-neutral-700 mt-1">
+                    <i data-feather="alert-triangle" class="text-rose-600"></i>
+                  </div>
+                  <div>
+                    <h3 class="font-medium">Solicitudes urgentes</h3>
+                    <p class="text-sm text-neutral-500 dark:text-neutral-400">5 solicitudes requieren atención inmediata</p>
+                  </div>
+                </div>
+                <a href="#" class="p-2 rounded-full hover:bg-neutral-100 dark:hover:bg-neutral-700">
+                  <i data-feather="chevron-right" class="text-neutral-400"></i>
+                </a>
+              </div>
+            </div>
+          </section>
+        </div>
+      </main>
+
+      <footer class="p-6 border-t border-neutral-200 dark:border-neutral-700 mt-6">
+        <p class="text-center text-sm text-neutral-500 dark:text-neutral-400">© 2023 UTEC · Panel Administrativo</p>
+      </footer>
+    </div>
+  </div>
+
+  <script>
+    AOS.init();
+    feather.replace();
+
+    // Sidebar
+    const sidebar = document.getElementById('sidebar');
+    const content = document.getElementById('content');
+    const sidebarToggle = document.getElementById('sidebar-toggle');
+    let isCollapsed = false;
+
+    sidebarToggle.addEventListener('click', ()=>{
+      // Desktop colapsable
+      isCollapsed = !isCollapsed;
+      if(isCollapsed){
+        sidebar.classList.add('sidebar-collapsed');
+        content.classList.remove('content-expanded');
+        content.classList.add('content-collapsed');
+      }else{
+        sidebar.classList.remove('sidebar-collapsed');
+        content.classList.remove('content-collapsed');
+        content.classList.add('content-expanded');
+      }
+      // Mobile drawer
+      sidebar.classList.toggle('sidebar-mobile');
+    });
+
+    // Tema persistente
+    (function(){
+      const html = document.documentElement;
+      const saved = localStorage.getItem('theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+      if(saved){ html.classList.toggle('dark', saved==='dark'); }
+      else { html.classList.toggle('dark', prefersDark); }
+
+      document.getElementById('theme-toggle')?.addEventListener('click', ()=>{
+        const toDark = !html.classList.contains('dark');
+        html.classList.toggle('dark', toDark);
+        localStorage.setItem('theme', toDark ? 'dark' : 'light');
+        feather.replace();
+      });
+    })();
+  </script>
+</body>
+</html>

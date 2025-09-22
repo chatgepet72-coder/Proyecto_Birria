@@ -17,7 +17,7 @@ $router->post('/src/plataforma/login',     [new AuthController, 'login']);
 $router->get('/src/plataforma/logout',     [new AuthController, 'logout']);
 
 /* ========== Panel ALUMNO (requiere login) ========== */
-$router->get('/src/plataforma/app',                    [new DashboardController, 'index']);
+$router->get('/src/plataforma/app',            [new StudentDashboardController,'index']);   // alumnos
 $router->get('/src/plataforma/app/materias',           [new CoursesController, 'index']);
 $router->get('/src/plataforma/app/horario',            [new ScheduleController, 'index']);
 $router->get('/src/plataforma/app/calificaciones',     [new GradesController, 'index']);
@@ -30,5 +30,6 @@ $router->get('/src/plataforma/teacher',                [new TeacherDashboardCont
 
 /* ========== Panel ADMIN ========== */
 $router->get('/src/plataforma/admin',                  [new AdminDashboardController, 'index']);
+
 
 $router->dispatch();
