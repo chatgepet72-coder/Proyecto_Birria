@@ -134,7 +134,7 @@
       </nav>
 
       <div class="p-4 border-t border-neutral-200 dark:border-neutral-700 mt-auto">
-        <a href="#" class="nav-item flex items-center space-x-3 p-3 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-700 w-full">
+        <a href="/src/plataforma/logout" class="nav-item flex items-center space-x-3 p-3 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-700 w-full">
           <i data-feather="log-out"></i><span class="nav-text">Cerrar sesión</span>
         </a>
       </div>

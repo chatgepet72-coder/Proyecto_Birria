@@ -11,25 +11,36 @@ foreach (glob(__DIR__ . '/app/controllers/*.php') as $f) require $f;
 
 $router = new Router();
 
+/* ===== Helper local: registra una ruta con y sin barra final ===== */
+$map = function($method, $path, $handler) use ($router) {
+  if ($method === 'GET')  { $router->get($path,  $handler); }
+  if ($method === 'POST') { $router->post($path, $handler); }
+  // variante con slash final si no es raíz
+  if ($path !== '/' && substr($path, -1) !== '/') {
+    if ($method === 'GET')  { $router->get($path.'/',  $handler); }
+    if ($method === 'POST') { $router->post($path.'/', $handler); }
+  }
+};
+
 /* ========== Auth ========== */
-$router->get('/src/plataforma/',           [new AuthController, 'showLogin']);
-$router->post('/src/plataforma/login',     [new AuthController, 'login']);
-$router->get('/src/plataforma/logout',     [new AuthController, 'logout']);
+$map('GET',  '/src/plataforma',         [new AuthController, 'showLogin']); // sin slash
+$map('GET',  '/src/plataforma/',        [new AuthController, 'showLogin']); // con slash (por claridad)
+$map('POST', '/src/plataforma/login',   [new AuthController, 'login']);
+$map('GET',  '/src/plataforma/logout',  [new AuthController, 'logout']);
 
 /* ========== Panel ALUMNO (requiere login) ========== */
-$router->get('/src/plataforma/app',            [new StudentDashboardController,'index']);   // alumnos
-$router->get('/src/plataforma/app/materias',           [new CoursesController, 'index']);
-$router->get('/src/plataforma/app/horario',            [new ScheduleController, 'index']);
-$router->get('/src/plataforma/app/calificaciones',     [new GradesController, 'index']);
-$router->get('/src/plataforma/app/encuestas',          [new SurveysController, 'index']);
-$router->get('/src/plataforma/app/becas',              [new ScholarshipsController, 'index']);
-$router->get('/src/plataforma/app/anuncios',           [new AnnouncementsController, 'index']);
+$map('GET', '/src/plataforma/app',                [new StudentDashboardController,'index']);
+$map('GET', '/src/plataforma/app/materias',       [new CoursesController,        'index']);
+$map('GET', '/src/plataforma/app/horario',        [new ScheduleController,       'index']);
+$map('GET', '/src/plataforma/app/calificaciones', [new GradesController,         'index']);
+$map('GET', '/src/plataforma/app/encuestas',      [new SurveysController,        'index']);
+$map('GET', '/src/plataforma/app/becas',          [new ScholarshipsController,   'index']);
+$map('GET', '/src/plataforma/app/anuncios',       [new AnnouncementsController,  'index']);
 
 /* ========== Panel MAESTRO ========== */
-$router->get('/src/plataforma/teacher',                [new TeacherDashboardController, 'index']);
+$map('GET', '/src/plataforma/teacher',            [new TeacherDashboardController,'index']);
 
 /* ========== Panel ADMIN ========== */
-$router->get('/src/plataforma/admin',                  [new AdminDashboardController, 'index']);
-
+$map('GET', '/src/plataforma/admin',              [new AdminDashboardController,'index']);
 
 $router->dispatch();
