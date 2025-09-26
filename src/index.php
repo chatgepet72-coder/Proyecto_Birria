@@ -29,7 +29,7 @@ function render_fragment_from($file){
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UTEC - Plataforma de E-Learning</title>
+    <title>UTSC - Plataforma de E-Learning</title>
     <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
@@ -156,7 +156,7 @@ function render_fragment_from($file){
                     </div>
                 </div>
                 <div data-aos="fade-left">
-                    <img src="http://static.photos/technology/640x360/1" alt="E-learning" class="rounded-lg shadow-xl">
+                    <img src=".//plataforma/app/img/PlantelUT.jpg" alt="E-learning" class="rounded-lg shadow-xl">
                 </div>
             </div>
         </div>
@@ -278,7 +278,7 @@ function render_fragment_from($file){
                 <!-- Testimonios iguales a tu diseño -->
                 <div class="bg-gray-50 p-8 rounded-lg" data-aos="fade-up">
                     <div class="flex items-center mb-4">
-                        <img class="w-12 h-12 rounded-full object-cover" src="http://static.photos/people/200x200/1" alt="Ana Martínez">
+                        <img class="w-12 h-12 rounded-full object-cover" src=" alt="Ana Martínez">
                         <div class="ml-4">
                             <h4 class="font-bold text-gray-900">Ana Martínez</h4>
                             <p class="text-[var(--ut-green-700)]">Ing. en Sistemas</p>
@@ -344,7 +344,7 @@ function render_fragment_from($file){
                     </div>
                 </div>
                 <div data-aos="fade-left">
-                    <img src="http://static.photos/education/640x360/5" alt="Estudiantes" class="rounded-lg shadow-xl">
+                    <img src="./plataforma/app/img/CorrecaminosUT.jpg" alt="Estudiantes" class="rounded-lg shadow-xl">
                 </div>
             </div>
         </div>
